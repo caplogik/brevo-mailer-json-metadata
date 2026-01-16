@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Mailer\Bridge\Brevo\RemoteEvent;
 
+use JsonException;
 use Symfony\Component\RemoteEvent\Event\Mailer\AbstractMailerEvent;
 use Symfony\Component\RemoteEvent\Event\Mailer\MailerDeliveryEvent;
 use Symfony\Component\RemoteEvent\Event\Mailer\MailerEngagementEvent;
@@ -64,6 +65,16 @@ final class BrevoPayloadConverter implements PayloadConverterInterface
 
         if (isset($payload['tags'])) {
             $event->setTags($payload['tags']);
+        }
+
+        if (isset($payload['X-Mailin-custom']) && is_string($payload['X-Mailin-custom'])) {
+            try {
+                $metadata = json_decode($payload['X-Mailin-custom'], flags: JSON_THROW_ON_ERROR | JSON_OBJECT_AS_ARRAY);
+
+                if (is_array($metadata)) {
+                    $event->setMetadata($metadata);
+                }
+            } catch (JsonException) {}
         }
 
         return $event;

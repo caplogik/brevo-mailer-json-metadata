@@ -139,6 +139,7 @@ final class BrevoApiTransport extends AbstractApiTransport
     private function prepareHeadersAndTags(Headers $headers): array
     {
         $headersAndTags = [];
+        $metadata = [];
         foreach ($headers->all() as $name => $header) {
             if (\in_array($name, ['from', 'sender', 'to', 'cc', 'bcc', 'subject', 'reply-to', 'content-type', 'accept', 'api-key'], true)) {
                 continue;
@@ -149,7 +150,7 @@ final class BrevoApiTransport extends AbstractApiTransport
                 continue;
             }
             if ($header instanceof MetadataHeader) {
-                $headersAndTags['headers']['X-Mailin-'.ucfirst(strtolower($header->getKey()))] = $header->getValue();
+                $metadata[$header->getKey()] = $header->getValue();
 
                 continue;
             }
@@ -164,6 +165,10 @@ final class BrevoApiTransport extends AbstractApiTransport
                 continue;
             }
             $headersAndTags['headers'][$header->getName()] = $header->getBodyAsString();
+        }
+
+        if ($metadata) {
+            $headersAndTags['headers']['X-Mailin-Custom'] = json_encode($metadata, JSON_THROW_ON_ERROR);
         }
 
         return $headersAndTags;

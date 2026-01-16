@@ -1,5 +1,5 @@
 {
-    "name": "symfony/brevo-mailer",
+    "name": "caplogik/brevo-mailer-json-metadata",
     "type": "symfony-mailer-bridge",
     "description": "Symfony Brevo Mailer Bridge",
     "keywords": [],
@@ -16,12 +16,18 @@
         }
     ],
     "require": {
-        "php": ">=8.4",
-        "symfony/mailer": "^7.4|^8.0"
+        "php": ">=8.1",
+        "symfony/mailer": "^6.4|^7.3|^8.0"
     },
     "require-dev": {
-        "symfony/http-client": "^7.4|^8.0",
-        "symfony/webhook": "^7.4|^8.0"
+        "phpunit/phpunit": "^11|^12",
+        "symfony/http-client": "^6.4|^7.3|^8.0",
+        "symfony/phpunit-bridge": "^6.4|^7.3|^8.0",
+        "symfony/webhook": "^6.4|^7.3|^8.0"
+    },
+
+    "conflict": {
+        "symfony/brevo-mailer": "*"
     },
     "autoload": {
         "psr-4": { "Symfony\\Component\\Mailer\\Bridge\\Brevo\\": "" },

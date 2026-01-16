@@ -55,11 +55,10 @@ class BrevoApiTransportTest extends TestCase
     public function testCustomHeader()
     {
         $params = ['param1' => 'foo', 'param2' => 'bar'];
-        $json = json_encode(['"custom_header_1' => 'custom_value_1']);
 
         $email = new Email();
         $email->getHeaders()
-            ->add(new MetadataHeader('custom', $json))
+            ->add(new MetadataHeader('metadata_identifier', 'metadata_value'))
             ->add(new TagHeader('TagInHeaders'))
             ->addTextHeader('templateId', 1)
             ->addParameterizedHeader('params', 'params', $params)
@@ -71,7 +70,7 @@ class BrevoApiTransportTest extends TestCase
         $payload = $method->invoke($transport, $email, $envelope);
 
         $this->assertArrayHasKey('X-Mailin-Custom', $payload['headers']);
-        $this->assertEquals($json, $payload['headers']['X-Mailin-Custom']);
+        $this->assertEquals(json_encode(['metadata_identifier' => 'metadata_value']), $payload['headers']['X-Mailin-Custom']);
 
         $this->assertArrayHasKey('tags', $payload);
         $this->assertEquals('TagInHeaders', current($payload['tags']));
